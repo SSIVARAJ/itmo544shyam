@@ -46,7 +46,6 @@ if [ -z "$input_security" ]
                         read input_security
                 done
 fi
-
 echo -n "What name you want to give for launch configuration???"
 read input_launchconfig
 if [ -z "$input_launchconfig" ]
@@ -59,5 +58,19 @@ if [ -z "$input_launchconfig" ]
 fi
 aws autoscaling create-launch-configuration --launch-configuration-name $input_launchconfig --image-id $input_ami --security-group $input_security --key-name $input_keyname --instance-type t2.micro --user-data file://hello.sh 
 echo "launching configuration..........."
-aws autoscaling create-auto-scaling-group --auto-scaling-group-name server-rg --launch-configuration $input_launchconfig --availability-zone us-west-2b --load-balancer-name $input --max-size 5 --min-size 2 --desired-capacity 3
+
+echo -n "How many instance you want to create?"
+read input_instance
+if [ -z "$input_instance" ]
+        then
+                while [ -z "$input_instance" ]
+                do
+                        echo -n "Please enter the number of instance you want to create: "
+                        read input_launchconfig
+                done
+fi
+
+
+
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name server-rg --launch-configuration $input_launchconfig --availability-zone us-west-2b --load-balancer-name $input --max-size 5 --min-size 2 --desired-capacity $input_instance
 echo "creating instances................"
